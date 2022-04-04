@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/AdrianFreemantle/LogService/internal/server"
+	"github.com/AdrianFreemantle/GoCommitLog/internal/server"
 )
 
 func main() {
