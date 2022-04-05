@@ -80,7 +80,7 @@ func (s *store) ReadAt(p []byte, offset uint64) (int, error) {
 func (s *store) Close() error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if err := s.File.Close(); err != nil {
+	if err := s.buf.Flush(); err != nil {
 		return err
 	}
 	return s.File.Close()
