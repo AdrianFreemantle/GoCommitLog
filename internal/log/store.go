@@ -77,4 +77,11 @@ func (s *store) ReadAt(p []byte, offset uint64) (int, error) {
 	return s.File.ReadAt(p, int64(offset))
 }
 
-
+func (s *store) Close() error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if err := s.File.Close(); err != nil {
+		return err
+	}
+	return s.File.Close()
+}
