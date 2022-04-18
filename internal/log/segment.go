@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	log_v1 "github.com/AdrianFreemantle/GoCommitLog/api/v1"
+	api "github.com/AdrianFreemantle/GoCommitLog/api/v1"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -50,7 +50,7 @@ func newSegment(dir string, baseOffset uint64, c Config) (*segment, error) {
 	return s, nil
 }
 
-func (s *segment) Append(record *log_v1.Record) (offset uint64, err error) {
+func (s *segment) Append(record *api.Record) (offset uint64, err error) {
 	cur := s.nextOffset
 	record.Offset = cur
 	p, err := proto.Marshal(record)
@@ -71,7 +71,7 @@ func (s *segment) Append(record *log_v1.Record) (offset uint64, err error) {
 	return cur, nil
 }
 
-func (s *segment) Read(off uint64) (*log_v1.Record, error) {
+func (s *segment) Read(off uint64) (*api.Record, error) {
 	_, pos, err := s.index.Read(int64(off - s.baseOffset))
 	if err != nil {
 		return nil, err
@@ -80,7 +80,7 @@ func (s *segment) Read(off uint64) (*log_v1.Record, error) {
 	if err != nil {
 		return nil, err
 	}
-	record := &log_v1.Record{}
+	record := &api.Record{}
 	err = proto.Unmarshal(p, record)
 	return record, err
 }
