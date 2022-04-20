@@ -68,6 +68,16 @@ func (l *Log) Append(record *api.Record) (uint64, error) {
 	return off, err
 }
 
+func (l *Log) newSegment(off uint64) error {
+	s, err := newSegment(l.Dir, off, l.Config)
+	if err != nil {
+		return err
+	}
+	l.segments = append(l.segments, s)
+	l.activeSegment = s
+	return nil
+}
+
 func (l *Log) Read(off uint64) (*api.Record, error) {
 	l.mu.RLock()
 	defer l.mu.RUnlock()
@@ -107,4 +117,20 @@ func (l *Log) Reset() error {
 		return err
 	}
 	return l.setup()
+}
+
+func (l *Log) LowestOffset() (uint64, error) {
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+	return l.segments[0].baseOffset, nil
+}
+
+func (l *Log) HighestOffset() (uint64, error) {
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+	off := l.segments[len(l.segments)-1].nextOffset
+	if off == 0 {
+		return 0, nil
+	}
+	return off - 1, nil
 }
