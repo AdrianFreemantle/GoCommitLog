@@ -4,6 +4,8 @@ import (
 	"context"
 
 	api "github.com/AdrianFreemantle/GoCommitLog/api/v1"
+	"google.golang.org/genproto/googleapis/rpc/status"
+	"google.golang.org/grpc/codes"
 )
 
 type Config struct {
